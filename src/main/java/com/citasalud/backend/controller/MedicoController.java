@@ -5,6 +5,12 @@ import com.citasalud.backend.service.MedicoService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+
+
+
 
 import java.util.List;
 
@@ -21,5 +27,12 @@ public class MedicoController {
     public List<MedicoDTO> obtenerMedicos() {
         return medicoService.obtenerTodos();
     }
+
+    @PostMapping
+    public ResponseEntity<MedicoDTO> crearMedico(@RequestBody MedicoDTO dto) {
+        MedicoDTO creado = medicoService.crear(dto);
+        return ResponseEntity.ok(creado);
+    }
 }
+
 

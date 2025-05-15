@@ -9,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class DisponibilidadDTO {
+    private Long id;                   // <- útil para respuesta
     private Long medicoId;
     private List<String> dias;         // Ej: ["LUNES", "MIERCOLES"]
     private LocalTime horaInicio;      // Ej: 08:00

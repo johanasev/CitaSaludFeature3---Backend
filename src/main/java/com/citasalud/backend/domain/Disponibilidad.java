@@ -17,10 +17,9 @@ public class Disponibilidad {
     @Column(name = "disponibilidad_id")
     private Long disponibilidadId;
 
-    @ElementCollection
-    @CollectionTable(name = "disponibilidad_dias", joinColumns = @JoinColumn(name = "disponibilidad_id"))
-    @Column(name = "dia")
-    private List<String> dias; // Ej: ["LUNES", "MARTES"]
+    @OneToMany(mappedBy = "disponibilidad", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Dia> dias;
+
 
     @Column(name = "hora_inicio", nullable = false)
     private LocalTime horaInicio;

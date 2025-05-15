@@ -7,6 +7,9 @@ import com.citasalud.backend.mapper.DisponibilidadMapper;
 import com.citasalud.backend.repository.DisponibilidadRepository;
 import com.citasalud.backend.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
+import com.citasalud.backend.domain.Dia;
+import java.util.List;
+
 
 import java.util.Optional;
 
@@ -23,14 +26,38 @@ public class DisponibilidadServiceImpl implements DisponibilidadService {
 
     @Override
     public DisponibilidadDTO agregarFranja(DisponibilidadDTO dto) {
-        Optional<Medico> medico = medicoRepo.findById(dto.getMedicoId());
-        if (medico.isEmpty()) {
-            throw new RuntimeException("Médico no encontrado");
-        }
+        Medico medico = medicoRepo.findById(dto.getMedicoId())
+                .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
 
-        Disponibilidad franja = DisponibilidadMapper.toEntity(dto);
-        franja.setMedico(medico.get());
+        Disponibilidad franja = new Disponibilidad();
+        franja.setHoraInicio(dto.getHoraInicio());
+        franja.setHoraFin(dto.getHoraFin());
+        franja.setMedico(medico);
+
+        // Convertir List<String> a List<Dia>
+        List<Dia> listaDias = dto.getDias().stream().map(nombre -> {
+            Dia dia = new Dia();
+            dia.setNombre(nombre);
+            dia.setDisponibilidad(franja); // referencia inversa
+            return dia;
+        }).toList();
+
+        franja.setDias(listaDias);
+
         Disponibilidad guardada = franjaRepo.save(franja);
-        return DisponibilidadMapper.toDTO(guardada);
+
+        // Convertir a DTO
+        DisponibilidadDTO respuesta = new DisponibilidadDTO();
+        respuesta.setId(guardada.getDisponibilidadId());
+        respuesta.setMedicoId(medico.getId());
+        respuesta.setHoraInicio(guardada.getHoraInicio());
+        respuesta.setHoraFin(guardada.getHoraFin());
+
+        List<String> diasRespuesta = guardada.getDias().stream()
+                .map(Dia::getNombre)
+                .toList();
+        respuesta.setDias(diasRespuesta);
+
+        return respuesta;
     }
 }

@@ -4,15 +4,13 @@ import com.citasalud.backend.domain.Medico;
 import com.citasalud.backend.dto.MedicoDTO;
 
 public class MedicoMapper {
+
     public static MedicoDTO toDTO(Medico medico) {
         MedicoDTO dto = new MedicoDTO();
-        dto.setId(medico.getId());
+        dto.setEspecialidadId(medico.getEspecialidad().getId());
+        dto.setEspecialidad(medico.getEspecialidad().getEspecialidad());
+        dto.setRolId(medico.getRol().getId()); // ← esta es la corrección
         dto.setNombreCompleto(medico.getNombre() + " " + medico.getApellido());
-        dto.setTipoDocumento(medico.getTipoDocumento());
-        dto.setNumeroDocumento(medico.getNumeroDocumento());
-        dto.setEspecialidad(
-                medico.getEspecialidad() != null ? medico.getEspecialidad().getEspecialidad() : null
-        );
 
         return dto;
     }

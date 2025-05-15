@@ -1,9 +1,10 @@
 package com.citasalud.backend.repository;
 
-import com.citasalud.backend.domain.Disponibilidad;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import com.citasalud.backend.domain.Rol;
+
 
 @Repository
-public interface DisponibilidadRepository extends JpaRepository<Disponibilidad, Long> {
+public interface RolRepository extends JpaRepository<Rol, Long> {
 }
