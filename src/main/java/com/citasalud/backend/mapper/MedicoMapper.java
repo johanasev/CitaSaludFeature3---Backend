@@ -11,8 +11,9 @@ public class MedicoMapper {
         dto.setTipoDocumento(medico.getTipoDocumento());
         dto.setNumeroDocumento(medico.getNumeroDocumento());
         dto.setEspecialidad(
-                medico.getEspecialidad() != null ? medico.getEspecialidad().getNombre() : null
+                medico.getEspecialidad() != null ? medico.getEspecialidad().getEspecialidad() : null
         );
+
         return dto;
     }
 }
