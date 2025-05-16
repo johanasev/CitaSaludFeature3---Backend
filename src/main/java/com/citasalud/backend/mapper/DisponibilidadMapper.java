@@ -7,8 +7,9 @@ public class DisponibilidadMapper {
 
     public static DisponibilidadDTO toDTO(Disponibilidad entity) {
         DisponibilidadDTO dto = new DisponibilidadDTO();
-        dto.setMedicoId(entity.getMedico().getId());
         dto.setDias(entity.getDias());
+        dto.setFechaInicio(entity.getFechaInicio());
+        dto.setFechaFin(entity.getFechaFin());
         dto.setHoraInicio(entity.getHoraInicio());
         dto.setHoraFin(entity.getHoraFin());
         return dto;
@@ -17,6 +18,8 @@ public class DisponibilidadMapper {
     public static Disponibilidad toEntity(DisponibilidadDTO dto) {
         Disponibilidad entity = new Disponibilidad();
         entity.setDias(dto.getDias());
+        entity.setFechaInicio(dto.getFechaInicio());
+        entity.setFechaFin(dto.getFechaFin());
         entity.setHoraInicio(dto.getHoraInicio());
         entity.setHoraFin(dto.getHoraFin());
         return entity;

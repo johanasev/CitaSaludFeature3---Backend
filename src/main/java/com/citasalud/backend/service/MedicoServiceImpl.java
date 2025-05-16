@@ -1,5 +1,6 @@
 package com.citasalud.backend.service;
 
+import com.citasalud.backend.domain.Medico;
 import com.citasalud.backend.dto.MedicoDTO;
 import com.citasalud.backend.mapper.MedicoMapper;
 import com.citasalud.backend.repository.MedicoRepository;
@@ -22,6 +23,13 @@ public class MedicoServiceImpl implements MedicoService {
                 .stream()
                 .map(MedicoMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void crearMedico(MedicoDTO medicoDTO) {
+        Medico medico = MedicoMapper.toEntity(medicoDTO); // Convierte el DTO a entidad
+        medicoRepository.save(medico); // Guarda en la BD
+         // Convierte de nuevo a DTO para retornar
     }
 }
 

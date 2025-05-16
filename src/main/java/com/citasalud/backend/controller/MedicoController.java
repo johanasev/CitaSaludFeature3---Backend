@@ -2,9 +2,9 @@ package com.citasalud.backend.controller;
 
 import com.citasalud.backend.dto.MedicoDTO;
 import com.citasalud.backend.service.MedicoService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,9 +17,16 @@ public class MedicoController {
         this.medicoService = medicoService;
     }
 
-    @GetMapping
+    @GetMapping("/obtenermedicos")
     public List<MedicoDTO> obtenerMedicos() {
         return medicoService.obtenerTodos();
     }
+
+    @PostMapping("crearmedico")
+    public ResponseEntity<MedicoDTO> crearMedico(@RequestBody MedicoDTO medicoDTO) {
+        medicoService.crearMedico(medicoDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
 }
 

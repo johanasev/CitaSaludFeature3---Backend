@@ -8,7 +8,9 @@ import com.citasalud.backend.repository.DisponibilidadRepository;
 import com.citasalud.backend.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DisponibilidadServiceImpl implements DisponibilidadService {
@@ -22,15 +24,24 @@ public class DisponibilidadServiceImpl implements DisponibilidadService {
     }
 
     @Override
-    public DisponibilidadDTO agregarFranja(DisponibilidadDTO dto) {
-        Optional<Medico> medico = medicoRepo.findById(dto.getMedicoId());
-        if (medico.isEmpty()) {
+    public void agregarFranja(DisponibilidadDTO dto, Long medicoId) {
+        Optional<Medico> medicoOpt = medicoRepo.findById(medicoId);
+        if (medicoOpt.isEmpty()) {
             throw new RuntimeException("Médico no encontrado");
         }
 
+        Medico medico = medicoOpt.get();
+
         Disponibilidad franja = DisponibilidadMapper.toEntity(dto);
-        franja.setMedico(medico.get());
-        Disponibilidad guardada = franjaRepo.save(franja);
-        return DisponibilidadMapper.toDTO(guardada);
+        franja.setMedico(medico);
+        franjaRepo.save(franja);
+    }
+
+    @Override
+    public List<DisponibilidadDTO> listarFranjas() {
+        return franjaRepo.findAll().stream()
+                .map((Disponibilidad entity) -> DisponibilidadMapper.toDTO(entity))
+                .collect(Collectors.toList());
+
     }
 }
