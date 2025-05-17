@@ -3,10 +3,14 @@ package com.citasalud.backend.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "medico")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Medico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,80 +37,10 @@ public class Medico {
     @Column(nullable = false)
     private String numeroDocumento;
 
+    @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL, orphanRemoval = true) // CascadeType.ALL y orphanRemoval son comunes para dependientes
+    private List<Disponibilidad> disponibilidades;
+
     // Y sus getters/setters:
-    public String getTipoDocumento() {
-        return tipoDocumento;
-    }
-
-    public void setTipoDocumento(String tipoDocumento) {
-        this.tipoDocumento = tipoDocumento;
-    }
-
-    public String getNumeroDocumento() {
-        return numeroDocumento;
-    }
-
-    public void setNumeroDocumento(String numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
-    }
-
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Especialidad getEspecialidad() {
-        return especialidad;
-    }
-
-    public void setEspecialidad(Especialidad especialidad) {
-        this.especialidad = especialidad;
-    }
-
-    public Rol getRolId() {
-        return rolId;
-    }
-
-    public void setRolId(Rol rolId) {
-        this.rolId = rolId;
-    }
-
 
 
 }

@@ -8,6 +8,7 @@ public interface DisponibilidadService {
 
     void agregarFranja(DisponibilidadDTO dto, Long medicoId);
     List<DisponibilidadDTO> listarFranjas();
-
+    public void eliminarFranja(Long franjaId);
+    public DisponibilidadDTO actualizarFranja(Long franjaId, DisponibilidadDTO dto);
 }
 

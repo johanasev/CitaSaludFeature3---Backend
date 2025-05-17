@@ -6,6 +6,7 @@ import com.citasalud.backend.dto.DisponibilidadDTO;
 import com.citasalud.backend.mapper.DisponibilidadMapper;
 import com.citasalud.backend.repository.DisponibilidadRepository;
 import com.citasalud.backend.repository.MedicoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,5 +44,39 @@ public class DisponibilidadServiceImpl implements DisponibilidadService {
                 .map((Disponibilidad entity) -> DisponibilidadMapper.toDTO(entity))
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    @Transactional // Asegura que la operación de eliminación sea transaccional
+    public void eliminarFranja(Long franjaId) {
+        // Opcional: verificar si la franja existe antes de intentar eliminar
+        if (!franjaRepo.existsById(franjaId)) {
+            throw new RuntimeException("Franja horaria con ID " + franjaId + " no encontrada");
+        }
+        franjaRepo.deleteById(franjaId);
+    }
+
+    // En DisponibilidadServiceImpl
+    @Override
+    @Transactional // Asegura que la operación sea transaccional
+    public DisponibilidadDTO actualizarFranja(Long franjaId, DisponibilidadDTO dto) {
+        // Buscar la franja existente
+        Disponibilidad franjaExistente = franjaRepo.findById(franjaId)
+                .orElseThrow(() -> new RuntimeException("Franja horaria con ID " + franjaId + " no encontrada"));
+
+        // Actualizar los campos de la entidad existente con los datos del DTO
+        // NOTA: El ID y el médico asociado generalmente NO se cambian en una actualización de franja
+        franjaExistente.setDias(dto.getDias());
+        franjaExistente.setFechaInicio(dto.getFechaInicio());
+        franjaExistente.setFechaFin(dto.getFechaFin());
+        franjaExistente.setHoraInicio(dto.getHoraInicio());
+        franjaExistente.setHoraFin(dto.getHoraFin());
+
+
+        // Guardar la entidad actualizada (JpaRepository.save sirve para update si tiene ID)
+        Disponibilidad franjaActualizada = franjaRepo.save(franjaExistente);
+
+        // Convertir y retornar el DTO actualizado
+        return DisponibilidadMapper.toDTO(franjaActualizada);
     }
 }
