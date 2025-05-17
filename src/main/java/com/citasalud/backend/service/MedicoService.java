@@ -8,5 +8,5 @@ import java.util.List;
 public interface MedicoService {
     List<MedicoDTO> obtenerTodos();
     void crearMedico(MedicoDTO medicoDTO);
-    public List<MedicoFranjasDTO> listarMedicosConFranjas();
+    List<MedicoFranjasDTO> listarMedicosConFranjas();
 }
