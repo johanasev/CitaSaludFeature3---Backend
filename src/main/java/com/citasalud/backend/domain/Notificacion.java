@@ -8,6 +8,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Getter
+@Setter
 public class Notificacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,36 +25,5 @@ public class Notificacion {
     @JoinColumn(name = "bloqueo_id", nullable = false)
     private BloqueoOperativo bloqueoOperativo;
 
-    public Long getIdNotificacion() {
-        return idNotificacion;
-    }
-
-    public void setIdNotificacion(Long idNotificacion) {
-        this.idNotificacion = idNotificacion;
-    }
-
-    public String getMensaje() {
-        return mensaje;
-    }
-
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
-    }
-
-    public LocalTime getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalTime fecha) {
-        this.fecha = fecha;
-    }
-
-    public BloqueoOperativo getBloqueoOperativo() {
-        return bloqueoOperativo;
-    }
-
-    public void setBloqueoOperativo(BloqueoOperativo bloqueoOperativo) {
-        this.bloqueoOperativo = bloqueoOperativo;
-    }
 }
 

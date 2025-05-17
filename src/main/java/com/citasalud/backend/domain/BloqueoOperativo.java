@@ -7,10 +7,9 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Entity
 @Getter
 @Setter
-@Entity
 public class BloqueoOperativo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,51 +32,5 @@ public class BloqueoOperativo {
     @JoinColumn(name = "medico_id", nullable = false)
     private Medico medico;
 
-    public Long getBloqueoOperativoId() {
-        return bloqueoOperativoId;
-    }
 
-    public void setBloqueoOperativoId(Long bloqueoOperativoId) {
-        this.bloqueoOperativoId = bloqueoOperativoId;
-    }
-
-    public Medico getMedico() {
-        return medico;
-    }
-
-    public void setMedico(Medico medico) {
-        this.medico = medico;
-    }
-
-    public String getMotivo() {
-        return motivo;
-    }
-
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
-    }
-
-    public LocalDate getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(LocalDate fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 }

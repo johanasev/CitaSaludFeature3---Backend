@@ -5,8 +5,9 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
+@Getter
+@Setter
 @Table(name = "especialidad")
 public class Especialidad {
     @Id
@@ -18,28 +19,5 @@ public class Especialidad {
     @Column(name = "descripcion")
     private String descripcion;
 
-    public long getEspecialidadId() {
-        return especialidadId;
-    }
-
-    public void setEspecialidadId(long especialidadId) {
-        this.especialidadId = especialidadId;
-    }
-
-    public String getEspecialidad() {
-        return especialidad;
-    }
-
-    public void setEspecialidad(String especialidad) {
-        this.especialidad = especialidad;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 }
 
