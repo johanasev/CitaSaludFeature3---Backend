@@ -9,6 +9,5 @@ public interface MedicoService {
     List<MedicoDTO> obtenerTodos();
     void crearMedico(MedicoDTO medicoDTO);
 
-
     List<MedicoFranjasDTO> listarMedicosConFranjas();
 }
