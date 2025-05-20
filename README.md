@@ -32,7 +32,7 @@ Backend del módulo de gestión de horarios y médicos para el sistema **CitaSal
 └── application/ # Clase principal para ejecución del backend
 
 
-## 🧪 Endpoints principales
+## 🎯 Endpoints principales
 
 ![Capturaendpoints1](https://github.com/user-attachments/assets/3764a71b-96d5-41b7-a6b0-359daebcab4f)
 ![Capturaendpoints2](https://github.com/user-attachments/assets/fae3c139-b654-44f9-a180-946635c33d5a)
