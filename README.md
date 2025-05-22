@@ -48,6 +48,8 @@ Backend del módulo de gestión de horarios y médicos para el sistema **CitaSal
 - `POST /api/medicos/crearmedico`
 - `GET /api/medicos/confranjas`
 
+[📁 Ver informe en Google Drive](https://drive.google.com/drive/folders/1XUitjg92WoS88TUI2N9mPXSZcm5BNcuW?usp=sharing)
+
 
 
 
