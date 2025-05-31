@@ -120,6 +120,9 @@
 			</plugin>
 
 		</plugins>
+
+		<finalName>backend</finalName>
+
 	</build>
 
 </project>
