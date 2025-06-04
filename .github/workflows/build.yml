@@ -1,0 +1,34 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches:
+      - main # O la rama que uses para tu código principal, por ejemplo 'master'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 19 # ¡Importante! Usamos Java 19 según tu proyecto
+        uses: actions/setup-java@v4
+        with:
+          java-version: '19'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Deploy to Railway
+        uses: Railway-Developers/action-deploy@v2.0.0
+        with:
+          # Asegúrate de que RAILWAY_TOKEN esté configurado como un secreto de GitHub
+          railway-token: ${{ secrets.RAILWAY_TOKEN }}
+          # Opcional: Especifica el ID del proyecto si tienes varios proyectos en Railway
+          # railway-project: tu-project-id-de-railway # Puedes encontrarlo en la URL del proyecto en Railway
+          # Opcional: Especifica el ID del servicio si tienes varios servicios en Railway y quieres desplegar solo este
+          # railway-service: tu-service-id-de-backend # Puedes encontrarlo en la URL del servicio en Railway
