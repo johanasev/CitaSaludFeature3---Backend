@@ -26,7 +26,12 @@ jobs:
       - name: Install Railway CLI and Deploy
         run: |
           curl -fsSL https://railway.app/install.sh | sh # Instala la CLI de Railway
-          export RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN }} # Exporta el token como variable de entorno
-          railway up . --service CitaSaludFeature3---Backend --project 84fc06b3-5d60-4cf6-a0ab-db526a11ce80
+          export RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN }}
+          export RAILWAY_SERVICE="CitaSaludFeature3---Backend" # Nombre exacto de tu servicio en Railway
+          export RAILWAY_PROJECT="84fc06b3-5d60-4cf6-a0ab-db526a11ce80" # Project ID correcto
+
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }} # github actions
+          # servicio y proyecto disponibles en el entorno de la ejecución
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE: CitaSaludFeature3---Backend
+          RAILWAY_PROJECT: 84fc06b3-5d60-4cf6-a0ab-db526a11ce80
