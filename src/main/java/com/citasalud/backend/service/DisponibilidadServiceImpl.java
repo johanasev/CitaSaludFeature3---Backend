@@ -25,6 +25,7 @@ public class DisponibilidadServiceImpl implements DisponibilidadService {
     }
 
     @Override
+    @Transactional
     public void agregarFranja(DisponibilidadDTO dto, Long medicoId) {
         Optional<Medico> medicoOpt = medicoRepo.findById(medicoId);
         if (medicoOpt.isEmpty()) {

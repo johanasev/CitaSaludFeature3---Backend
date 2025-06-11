@@ -5,6 +5,7 @@ import com.citasalud.backend.service.DisponibilidadService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class DisponibilidadController {
 
     // HU002 - Agregar franja horaria a un médico
     @PostMapping("/{id}")
+    @PreAuthorize("hasAnyRole('MEDICO', 'COORDINADOR')")
     public ResponseEntity<DisponibilidadDTO> agregarFranja(@Valid @RequestBody DisponibilidadDTO dto,
                                                            @PathVariable("id") Long medicoId) {
         franjaHorariaService.agregarFranja(dto, medicoId);
@@ -34,6 +36,7 @@ public class DisponibilidadController {
         return ResponseEntity.ok(franjas);
     }
 
+    @PreAuthorize("hasAnyRole('MEDICO', 'COORDINADOR', 'ADMINISTRADOR')")
     @DeleteMapping("/{idFranja}") // Usamos un nombre de variable claro para el ID de la franja
     public ResponseEntity<Void> eliminarFranja(@PathVariable("idFranja") Long franjaId) {
         franjaHorariaService.eliminarFranja(franjaId);
@@ -42,6 +45,7 @@ public class DisponibilidadController {
     }
 
     // En DisponibilidadController
+    @PreAuthorize("hasAnyRole('MEDICO', 'COORDINADOR', 'ADMINISTRADOR')")
     @PutMapping("/{idFranja}") // Usamos PUT para actualizar
     public ResponseEntity<DisponibilidadDTO> actualizarFranja(@PathVariable("idFranja") Long franjaId,
                                                               @Valid @RequestBody DisponibilidadDTO dto) { // Aplicamos validación al DTO

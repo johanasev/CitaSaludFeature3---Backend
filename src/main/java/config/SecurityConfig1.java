@@ -1,4 +1,4 @@
-package com.citasalud.backend.config;
+/*package com.citasalud.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,4 +16,4 @@ public class SecurityConfig {
                 .anyRequest().permitAll(); // permite todas las rutas sin login
         return http.build();
     }
-}
+}*/
