@@ -50,6 +50,26 @@ Backend del módulo de gestión de horarios y médicos para el sistema **CitaSal
 
 [📁 Ver informe en Google Drive](https://drive.google.com/drive/folders/1XUitjg92WoS88TUI2N9mPXSZcm5BNcuW?usp=sharing)
 
+## 🌐 Despliegue Automatizado
+
+Este proyecto utiliza **Railway** para el despliegue de la aplicación backend y **GitHub Actions** para automatizar el proceso de integración continua y despliegue continuo (CI/CD).
+
+### ¿Cómo funciona el despliegue?
+
+1.  **Railway como Plataforma de Despliegue:**
+    * La aplicación está desplegada en Railway, una plataforma que facilita el despliegue de servicios.
+    * Puedes acceder al servicio backend en la siguiente URL:[https://citasaludfeature3-backend-production.up.railway.app](https://citasaludfeature3-backend-production.up.railway.app/hola).
+    * Los logs de la aplicación y el estado del servicio pueden ser monitoreados desde el dashboard de Railway.
+
+2.  **GitHub Actions para CI/CD:**
+    * Cada vez que se realiza un `push` a la rama `main` del repositorio de GitHub, se activa automáticamente un workflow de GitHub Actions.
+    * Este workflow (`.github/workflows/build.yml`) se encarga de:
+        * Obtener el código fuente del repositorio.
+        * Configurar el entorno Java (JDK 19) necesario para la aplicación.
+        * Construir el proyecto Spring Boot utilizando Maven, generando el paquete `.jar` ejecutable.
+        * Instalar la interfaz de línea de comandos (CLI) de Railway.
+        * Autenticarse con Railway utilizando un token de API seguro (`RAILWAY_TOKEN`) almacenado como un secreto en GitHub.
+        * Desplegar la aplicación en el servicio `CitaSaludFeature3---Backend` dentro del proyecto de Railway con ID `84fc06b3-5d60-4cf6-a0ab-db526a11ce80`.
 
 
 
