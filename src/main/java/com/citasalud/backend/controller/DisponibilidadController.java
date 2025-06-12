@@ -9,10 +9,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api/franjas")
 @CrossOrigin(origins = "*")
+@SecurityRequirement(name = "BearerAuth")
 public class DisponibilidadController {
 
     private final DisponibilidadService franjaHorariaService;
@@ -22,7 +24,9 @@ public class DisponibilidadController {
     }
 
     // HU002 - Agregar franja horaria a un médico
+
     @PostMapping("/{id}")
+
     @PreAuthorize("hasAnyRole('MEDICO', 'COORDINADOR')")
     public ResponseEntity<DisponibilidadDTO> agregarFranja(@Valid @RequestBody DisponibilidadDTO dto,
                                                            @PathVariable("id") Long medicoId) {

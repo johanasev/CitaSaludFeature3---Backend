@@ -3,15 +3,18 @@ package com.citasalud.backend.controller;
 import com.citasalud.backend.dto.MedicoDTO;
 import com.citasalud.backend.dto.MedicoFranjasDTO;
 import com.citasalud.backend.service.MedicoService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api/medicos")
+@SecurityRequirement(name = "BearerAuth")
 public class MedicoController {
     private final MedicoService medicoService;
 

@@ -30,6 +30,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        // 👉 Saltar autenticación para rutas públicas (Swagger, login, registro, etc.)
+        String path = request.getRequestURI();
+        if (path.startsWith("/api/auth")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/swagger-ui.html")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // 1. Obtener el JWT de la solicitud (del encabezado Authorization)
         String token = getJwtFromRequest(request);
 
@@ -44,8 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Crear un objeto de autenticación
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
-                    null, // La contraseña es null porque ya estamos autenticando con el token
-                    userDetails.getAuthorities() // Roles del usuario
+                    null,
+                    userDetails.getAuthorities()
             );
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -56,6 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Continuar con la cadena de filtros
         filterChain.doFilter(request, response);
     }
+
 
     // Metodo auxiliar para extraer el JWT del encabezado Authorization
     private String getJwtFromRequest(HttpServletRequest request) {
