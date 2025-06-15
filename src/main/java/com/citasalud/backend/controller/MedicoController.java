@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api/medicos")
+@CrossOrigin(origins = "*")
 @SecurityRequirement(name = "BearerAuth")
 public class MedicoController {
     private final MedicoService medicoService;

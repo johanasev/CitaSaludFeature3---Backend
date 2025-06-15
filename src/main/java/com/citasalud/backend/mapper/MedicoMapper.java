@@ -4,6 +4,7 @@ import com.citasalud.backend.domain.Especialidad;
 import com.citasalud.backend.domain.Medico;
 import com.citasalud.backend.domain.Rol;
 import com.citasalud.backend.dto.MedicoDTO;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class MedicoMapper {
 
@@ -34,6 +35,7 @@ public class MedicoMapper {
     }
 
     public static Medico toEntity(MedicoDTO dto) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (dto == null) {
             return null;
         }
@@ -42,7 +44,9 @@ public class MedicoMapper {
         medico.setNombre(dto.getNombre());
         medico.setApellido(dto.getApellido());
         medico.setEmail(dto.getEmail());
-        medico.setPassword(dto.getPassword());
+
+        medico.setPassword(encoder.encode(dto.getPassword()));
+
         medico.setTipoDocumento(dto.getTipoDocumento());
         medico.setNumeroDocumento(dto.getNumeroDocumento());
 

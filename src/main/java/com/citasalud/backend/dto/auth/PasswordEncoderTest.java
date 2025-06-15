@@ -13,5 +13,9 @@ public class PasswordEncoderTest {
         rawPassword = "hola1234"; // <-- ESTA ES LA CONTRASEÑA EN TEXTO PLANO PARA EL LOGIN
         encodedPassword = encoder.encode(rawPassword);
         System.out.println("Contraseña hasheada (copia esto): " + encodedPassword);
+
+        rawPassword = "passwordSeguro123"; // <-- ESTA ES LA CONTRASEÑA EN TEXTO PLANO PARA EL LOGIN
+        encodedPassword = encoder.encode(rawPassword);
+        System.out.println("Contraseña hasheada (copia esto): " + encodedPassword);
     }
 }

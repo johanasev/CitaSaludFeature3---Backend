@@ -18,8 +18,10 @@ public class Medico {
     private Long id;
     private String nombre;
     private String apellido;
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String email;
+
     @Column(nullable = false)
     private String password;
 
@@ -34,7 +36,7 @@ public class Medico {
     @Column(nullable = false)
     private String tipoDocumento;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String numeroDocumento;
 
     @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL, orphanRemoval = true) // CascadeType.ALL y orphanRemoval son comunes para dependientes
