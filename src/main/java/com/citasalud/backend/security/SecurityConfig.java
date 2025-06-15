@@ -64,7 +64,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+/*    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -75,5 +75,5 @@ public class SecurityConfig {
                         .allowedHeaders("*");
             }
         };
-    }
+    }*/
 }
