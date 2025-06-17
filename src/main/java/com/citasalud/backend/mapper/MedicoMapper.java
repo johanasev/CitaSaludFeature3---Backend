@@ -3,70 +3,65 @@ package com.citasalud.backend.mapper;
 import com.citasalud.backend.domain.Especialidad;
 import com.citasalud.backend.domain.Medico;
 import com.citasalud.backend.domain.Rol;
-import com.citasalud.backend.dto.MedicoDTO;
+import com.citasalud.backend.dto.MedicoDTO; // DTO para entrada (request)
+import com.citasalud.backend.dto.MedicoResponseDTO; // DTO para salida (response con HATEOAS)
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class MedicoMapper {
 
-    public static MedicoDTO toDTO(Medico medico) {
+    // Método para convertir de Entidad Medico a MedicoResponseDTO (para respuestas con HATEOAS)
+    public static MedicoResponseDTO toResponseDTO(Medico medico) {
         if (medico == null) {
             return null;
         }
-
-        MedicoDTO dto = new MedicoDTO();
+        MedicoResponseDTO dto = new MedicoResponseDTO();
+        dto.setId(medico.getId()); // Asegúrate de mapear el ID de la entidad
         dto.setNombre(medico.getNombre());
         dto.setApellido(medico.getApellido());
         dto.setEmail(medico.getEmail());
         dto.setTipoDocumento(medico.getTipoDocumento());
         dto.setNumeroDocumento(medico.getNumeroDocumento());
 
-        // Mapear la información de las relaciones (Especialidad y Rol)
         if (medico.getEspecialidad() != null) {
             dto.setEspecialidadId(medico.getEspecialidad().getEspecialidadId());
-             // Asumiendo que Especialidad tiene getNombre()
+            dto.setEspecialidadNombre(medico.getEspecialidad().getEspecialidad()); // Asumiendo que Especialidad tiene getEspecialidad()
         }
-
-        if (medico.getRolId() != null) { // Nota: el nombre de tu variable es rolId, lo uso aquí
+        if (medico.getRolId() != null) {
             dto.setRolId(medico.getRolId().getRolId());
-             // Asumiendo que Rol tiene getNombre()
+            dto.setRolNombre(medico.getRolId().getNombre()); // Asumiendo que Rol tiene getNombre()
         }
-
         return dto;
     }
 
+    // Método para convertir de MedicoDTO (request) a Entidad Medico
     public static Medico toEntity(MedicoDTO dto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (dto == null) {
             return null;
         }
-
         Medico medico = new Medico();
+        // El ID no se establece aquí, se genera por la DB o se usa en actualizaciones
         medico.setNombre(dto.getNombre());
         medico.setApellido(dto.getApellido());
         medico.setEmail(dto.getEmail());
-
         medico.setPassword(encoder.encode(dto.getPassword()));
-
         medico.setTipoDocumento(dto.getTipoDocumento());
         medico.setNumeroDocumento(dto.getNumeroDocumento());
 
+        // Importante: No se debe crear nuevas entidades de Especialidad y Rol aquí directamente.
+        // Debes cargar las entidades existentes de la base de datos usando sus respectivos repositorios.
+        // Los "DUMMY"  deben ser reemplazados por la inyección de los repositorios de Especialidad y Rol en el servicio,
+        // y luego buscando la entidad por ID antes de asignarla al médico.
         if (dto.getEspecialidadId() != null) {
-            // Esto es un DUMMY. Reemplazar en la vida real.
-            Especialidad especialidad = new Especialidad();
+            Especialidad especialidad = new Especialidad(); // Esto DEBE SER cargado de la DB en el Servicio
             especialidad.setEspecialidadId(dto.getEspecialidadId());
-            // Si necesitas otros campos de Especialidad, cárgalos desde el DTO o la base de datos.
             medico.setEspecialidad(especialidad);
         }
-
         if (dto.getRolId() != null) {
-            // Esto es un DUMMY. Reemplazar en la vida real.
-            Rol rol = new Rol();
+            Rol rol = new Rol(); // Esto DEBE SER cargado de la DB en el Servicio
             rol.setRolId(dto.getRolId());
-            // Si necesitas otros campos de Rol, cárgalos desde el DTO o la base de datos.
-            medico.setRolId(rol); // Nota: tu variable se llama rolId, lo uso aquí
+            medico.setRolId(rol);
         }
-
-
         return medico;
     }
 }
