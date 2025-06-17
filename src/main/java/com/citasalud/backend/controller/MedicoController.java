@@ -68,7 +68,7 @@ public class MedicoController {
         ));
     }
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'COORDINADOR')")
+  //  @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'COORDINADOR')")
     @PostMapping("/crearmedico")
     // Cambiar el tipo de retorno para HATEOAS
     public ResponseEntity<EntityModel<MedicoResponseDTO>> crearMedico(@RequestBody MedicoDTO medicoDTO) {
