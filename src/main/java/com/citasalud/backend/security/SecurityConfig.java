@@ -1,5 +1,6 @@
 package com.citasalud.backend.security;
 
+import io.swagger.v3.oas.models.PathItem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
+
 
 import java.util.List;
 
@@ -52,10 +55,10 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/api/especialidades",
-                                "/api/roles",
-                                "/api/medicos/crearmedico"
+                                "/api/roles"
                         ).permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/medicos/crearmedico").permitAll()
                         .anyRequest().authenticated()
                 );
 
