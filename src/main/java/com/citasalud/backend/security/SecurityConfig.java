@@ -70,7 +70,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Asegura que tu frontend local esté permitido
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:3000",                     // Desarrollo local
+                "https://cita-salud-feature3-frontend.vercel.app/"       // Producción
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true); // Necesario si se usan cookies o JWT
