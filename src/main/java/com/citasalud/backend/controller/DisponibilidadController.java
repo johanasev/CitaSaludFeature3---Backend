@@ -34,6 +34,7 @@ public class DisponibilidadController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/listarfranjas")
     public ResponseEntity<List<DisponibilidadDTO>> obtenerFranjas() {
         List<DisponibilidadDTO> franjas = franjaHorariaService.listarFranjas();
