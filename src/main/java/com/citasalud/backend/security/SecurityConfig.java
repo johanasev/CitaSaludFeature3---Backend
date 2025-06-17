@@ -52,7 +52,8 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/api/especialidades",
-                                "/api/roles"
+                                "/api/roles",
+                                "/api/medicos/crearmedico"
                         ).permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
