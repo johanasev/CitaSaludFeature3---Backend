@@ -1,0 +1,847 @@
+
+  openapi: 3.0.3
+  info:
+    title: CitaSalud Backend API
+    description: API for managing medical schedules and doctors with HATEOAS support
+    version: 0.0.1-SNAPSHOT
+    contact:
+      name: CitaSalud Team
+      email: support@citasalud.com
+  servers:
+    - url: http://localhost:8080
+      description: Local development server
+  security:
+    - BearerAuth: []
+  paths:
+    /api/auth/login:
+      post:
+        summary: Authenticate user
+        description: Authenticates a user with email and password, returning a JWT token
+        operationId: login
+        tags:
+          - Authentication
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginRequest'
+        responses:
+          '200':
+            description: Successful login
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/AuthResponse'
+          '401':
+            description: Invalid login credentials
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+    /api/franjas/{medicoId}:
+      post:
+        summary: Add availability slot for a doctor
+        description: Creates a new availability slot for a specified doctor
+        operationId: addAvailability
+        tags:
+          - Availability
+        security:
+          - BearerAuth: []
+        parameters:
+          - name: medicoId
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: ID of the doctor
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisponibilidadDTO'
+        responses:
+          '201':
+            description: Availability slot created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/DisponibilidadDTO'
+            links:
+              self:
+                operationId: getAvailabilityById
+                parameters:
+                  idFranja: '$response.body#/disponibilidadId'
+              franjas:
+                operationId: getAllAvailabilities
+          '400':
+            description: Invalid input
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '403':
+            description: Forbidden (requires MEDICO or COORDINADOR role)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+    /api/franjas/medico/{medicoId}:
+      get:
+        summary: Get availabilities by doctor
+        description: Retrieves all availability slots for a specified doctor
+        operationId: getAvailabilitiesByDoctor
+        tags:
+          - Availability
+        security:
+          - BearerAuth: []
+        parameters:
+          - name: medicoId
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: ID of the doctor
+        responses:
+          '200':
+            description: List of availability slots
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DisponibilidadDTO'
+            links:
+              self:
+                operationId: getAvailabilitiesByDoctor
+                parameters:
+                  medicoId: '$request.path.medicoId'
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '404':
+            description: Doctor not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+    /api/franjas/listarfranjas:
+      get:
+        summary: Get all availabilities
+        description: Retrieves all availability slots
+        operationId: getAllAvailabilities
+        tags:
+          - Availability
+        security:
+          - BearerAuth: []
+        responses:
+          '200':
+            description: List of all availability slots
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DisponibilidadDTO'
+            links:
+              self:
+                operationId: getAllAvailabilities
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+    /api/franjas/{idFranja}:
+      get:
+        summary: Get availability by ID
+        description: Retrieves a specific availability slot by its ID
+        operationId: getAvailabilityById
+        tags:
+          - Availability
+        security:
+          - BearerAuth: []
+        parameters:
+          - name: idFranja
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: ID of the availability slot
+        responses:
+          '200':
+            description: Availability slot details
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/DisponibilidadDTO'
+            links:
+              self:
+                operationId: getAvailabilityById
+                parameters:
+                  idFranja: '$request.path.idFranja'
+              franjas:
+                operationId: getAllAvailabilities
+              update-franja:
+                operationId: updateAvailability
+                parameters:
+                  idFranja: '$request.path.idFranja'
+              delete-franja:
+                operationId: deleteAvailability
+                parameters:
+                  idFranja: '$request.path.idFranja'
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '404':
+            description: Availability slot not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+      put:
+        summary: Update availability slot
+        description: Updates an existing availability slot
+        operationId: updateAvailability
+        tags:
+          - Availability
+        security:
+          - BearerAuth: []
+        parameters:
+          - name: idFranja
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: ID of the availability slot
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisponibilidadDTO'
+        responses:
+          '200':
+            description: Updated availability slot
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/DisponibilidadDTO'
+            links:
+              self:
+                operationId: getAvailabilityById
+                parameters:
+                  idFranja: '$response.body#/disponibilidadId'
+              franjas:
+                operationId: getAllAvailabilities
+          '400':
+            description: Invalid input
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '403':
+            description: Forbidden (requires MEDICO, COORDINADOR, or ADMINISTRADOR role)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '404':
+            description: Availability slot not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+      delete:
+        summary: Delete availability slot
+        description: Deletes an existing availability slot
+        operationId: deleteAvailability
+        tags:
+          - Availability
+        security:
+          - BearerAuth: []
+        parameters:
+          - name: idFranja
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: ID of the availability slot
+        responses:
+          '204':
+            description: Availability slot deleted
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '403':
+            description: Forbidden (requires MEDICO, COORDINADOR, or ADMINISTRADOR role)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '404':
+            description: Availability slot not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+    /api/medicos/obtenermedicos:
+      get:
+        summary: Get all doctors
+        description: Retrieves a list of all doctors
+        operationId: getAllDoctors
+        tags:
+          - Doctors
+        security:
+          - BearerAuth: []
+        responses:
+          '200':
+            description: List of doctors
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MedicoResponseDTO'
+            links:
+              self:
+                operationId: getAllDoctors
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+    /api/medicos/{id}:
+      get:
+        summary: Get doctor by ID
+        description: Retrieves details of a specific doctor by ID
+        operationId: getDoctorById
+        tags:
+          - Doctors
+        security:
+          - BearerAuth: []
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: ID of the doctor
+        responses:
+          '200':
+            description: Doctor details
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MedicoResponseDTO'
+            links:
+              self:
+                operationId: getDoctorById
+                parameters:
+                  id: '$request.path.id'
+              medicos:
+                operationId: getAllDoctors
+              disponibilidades:
+                operationId: getAvailabilitiesByDoctor
+                parameters:
+                  medicoId: '$request.path.id'
+              update-medico:
+                operationId: updateDoctor
+                parameters:
+                  id: '$request.path.id'
+              delete-medico:
+                operationId: deleteDoctor
+                parameters:
+                  id: '$request.path.id'
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '404':
+            description: Doctor not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+      put:
+        summary: Update doctor
+        description: Updates an existing doctor
+        operationId: updateDoctor
+        tags:
+          - Doctors
+        security:
+          - BearerAuth: []
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: ID of the doctor
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicoDTO'
+        responses:
+          '200':
+            description: Updated doctor
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MedicoResponseDTO'
+            links:
+              self:
+                operationId: getDoctorById
+                parameters:
+                  id: '$response.body#/id'
+              medicos:
+                operationId: getAllDoctors
+          '400':
+            description: Invalid input
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '403':
+            description: Forbidden (requires ADMINISTRADOR or COORDINADOR role)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '404':
+            description: Doctor not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+      delete:
+        summary: Delete doctor
+        description: Deletes an existing doctor
+        operationId: deleteDoctor
+        tags:
+          - Doctors
+        security:
+          - BearerAuth: []
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: ID of the doctor
+        responses:
+          '204':
+            description: Doctor deleted
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '403':
+            description: Forbidden (requires ADMINISTRADOR or COORDINADOR role)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '404':
+            description: Doctor not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+    /api/medicos/crearmedico:
+      post:
+        summary: Create doctor
+        description: Creates a new doctor
+        operationId: createDoctor
+        tags:
+          - Doctors
+        security:
+          - BearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicoDTO'
+        responses:
+          '201':
+            description: Doctor created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MedicoResponseDTO'
+            links:
+              self:
+                operationId: getDoctorById
+                parameters:
+                  id: '$response.body#/id'
+              medicos:
+                operationId: getAllDoctors
+          '400':
+            description: Invalid input
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+          '403':
+            description: Forbidden (requires ADMINISTRADOR or COORDINADOR role)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+    /api/medicos/confranjas:
+      get:
+        summary: Get doctors with availabilities
+        description: Retrieves a list of doctors with their availability slots
+        operationId: getDoctorsWithAvailabilities
+        tags:
+          - Doctors
+        security:
+          - BearerAuth: []
+        responses:
+          '200':
+            description: List of doctors with availabilities
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/MedicoFranjasDTO'
+          '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+  components:
+    securitySchemes:
+      BearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+        description: JWT token obtained from /api/auth/login
+    schemas:
+      LoginRequest:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            type: string
+            format: email
+            example: usuario@example.com
+            description: User's email address
+          password:
+            type: string
+            example: 123456
+            description: User's password
+      AuthResponse:
+        type: object
+        properties:
+          jwt:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6...
+            description: JWT token for authentication
+          email:
+            type: string
+            example: usuario@example.com
+            description: Authenticated user's email
+          role:
+            type: string
+            example: COORDINADOR
+            description: User's role
+      DisponibilidadDTO:
+        type: object
+        required:
+          - dias
+          - horaInicio
+          - horaFin
+        properties:
+          disponibilidadId:
+            type: integer
+            format: int64
+            example: 1
+            description: Unique identifier for the availability slot
+          dias:
+            type: array
+            items:
+              type: string
+              enum: [LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO]
+            minItems: 1
+            example: [LUNES, MARTES]
+            description: List of days for the availability
+          fechaInicio:
+            type: string
+            format: date
+            example: 2025-06-18
+            description: Start date of the availability
+          fechaFin:
+            type: string
+            format: date
+            example: 2025-12-31
+            description: End date of the availability
+          horaInicio:
+            type: string
+            format: time
+            example: 08:00:00
+            description: Start time of the availability
+          horaFin:
+            type: string
+            format: time
+            example: 17:00:00
+            description: End time of the availability
+          _links:
+            type: object
+            description: HATEOAS links
+            properties:
+              self:
+                $ref: '#/components/schemas/Link'
+              franjas:
+                $ref: '#/components/schemas/Link'
+              update-franja:
+                $ref: '#/components/schemas/Link'
+              delete-franja:
+                $ref: '#/components/schemas/Link'
+      MedicoDTO:
+        type: object
+        required:
+          - nombre
+          - apellido
+          - email
+          - password
+          - tipoDocumento
+          - numeroDocumento
+          - especialidadId
+          - rolId
+        properties:
+          nombre:
+            type: string
+            example: Juan
+            description: Doctor's first name
+          apellido:
+            type: string
+            example: Pérez
+            description: Doctor's last name
+          email:
+            type: string
+            format: email
+            example: juan.perez@example.com
+            description: Doctor's email address
+          password:
+            type: string
+            example: securepassword123
+            description: Doctor's password (hashed in backend)
+          tipoDocumento:
+            type: string
+            example: DNI
+            description: Type of identification document
+          numeroDocumento:
+            type: string
+            example: 12345678
+            description: Document number
+          especialidadId:
+            type: integer
+            format: int64
+            example: 1
+            description: ID of the doctor's specialty
+          rolId:
+            type: integer
+            format: int64
+            example: 1
+            description: ID of the doctor's role
+      MedicoResponseDTO:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+            example: 1
+            description: Unique identifier for the doctor
+          nombre:
+            type: string
+            example: Juan
+            description: Doctor's first name
+          apellido:
+            type: string
+            example: Pérez
+            description: Doctor's last name
+          email:
+            type: string
+            format: email
+            example: juan.perez@example.com
+            description: Doctor's email address
+          tipoDocumento:
+            type: string
+            example: DNI
+            description: Type of identification document
+          numeroDocumento:
+            type: string
+            example: 12345678
+            description: Document number
+          especialidadId:
+            type: integer
+            format: int64
+            example: 1
+            description: ID of the doctor's specialty
+          especialidadNombre:
+            type: string
+            example: Cardiología
+            description: Name of the doctor's specialty
+          rolId:
+            type: integer
+            format: int64
+            example: 1
+            description: ID of the doctor's role
+          rolNombre:
+            type: string
+            example: MEDICO
+            description: Name of the doctor's role
+          _links:
+            type: object
+            description: HATEOAS links
+            properties:
+              self:
+                $ref: '#/components/schemas/Link'
+              medicos:
+                $ref: '#/components/schemas/Link'
+              disponibilidades:
+                $ref: '#/components/schemas/Link'
+              update-medico:
+                $ref: '#/components/schemas/Link'
+              delete-medico:
+                $ref: '#/components/schemas/Link'
+      MedicoFranjasDTO:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+            example: 1
+            description: Unique identifier for the doctor
+          nombre:
+            type: string
+            example: Juan
+            description: Doctor's first name
+          apellido:
+            type: string
+            example: Pérez
+            description: Doctor's last name
+          email:
+            type: string
+            format: email
+            example: juan.perez@example.com
+            description: Doctor's email address
+          tipoDocumento:
+            type: string
+            example: DNI
+            description: Type of identification document
+          numeroDocumento:
+            type: string
+            example: 12345678
+            description: Document number
+          especialidadId:
+            type: integer
+            format: int64
+            example: 1
+            description: ID of the doctor's specialty
+          especialidadNombre:
+            type: string
+            example: Cardiología
+            description: Name of the doctor's specialty
+          rolId:
+            type: integer
+            format: int64
+            example: 1
+            description: ID of the doctor's role
+          rolNombre:
+            type: string
+            example: MEDICO
+            description: Name of the doctor's role
+          franjasDisponibles:
+            type: array
+            items:
+              $ref: '#/components/schemas/DisponibilidadDTO'
+            description: List of availability slots for the doctor
+      ErrorResponse:
+        type: object
+        properties:
+          error:
+            type: string
+            example: Invalid login credentials
+            description: Error message
+          status:
+            type: integer
+            example: 401
+            description: HTTP status code
+          timestamp:
+            type: string
+            format: date-time
+            example: 2025-06-18T00:30:00Z
+            description: Timestamp of the error
+      Link:
+        type: object
+        properties:
+          href:
+            type: string
+            example: http://localhost:8080/api/medicos/1
+            description: URI of the linked resource
+          rel:
+            type: string
+            example: self
+            description: Relationship of the link to the resource

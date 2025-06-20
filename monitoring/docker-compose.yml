@@ -9,7 +9,8 @@ services:
       # **IMPORTANTE:** Reemplaza los valores con tus credenciales de Render.
       DB_URL: "jdbc:postgresql://dpg-d0t7osm3jp1c73ea5c50-a.oregon-postgres.render.com/cita_salud"
       DB_USERNAME: "postgress"
-      DB_PASSWORD: "N2M2XB7EmxWgJoU6qkXQhYtctt3SmqRN"
+      DB_PASSWORD: "N2M2XB7EwxWgJoU6qkKQhYtCtt3SmqRN"
+
     # *** HE ELIMINADO LA LÍNEA: depends_on: - prometheus ***
     # El backend NO necesita esperar a Prometheus para iniciar.
 
