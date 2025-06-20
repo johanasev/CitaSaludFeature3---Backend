@@ -66,7 +66,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000",
-                "https://cita-salud-backend.onrender.com")); // Asegura que tu frontend local esté permitido
+                "https://cita-salud-backend.onrender.com",
+                "https://cita-salud-feature3-frontend.vercel.app/")); // Asegura que tu frontend local esté permitido
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true); // Necesario si se usan cookies o JWT
