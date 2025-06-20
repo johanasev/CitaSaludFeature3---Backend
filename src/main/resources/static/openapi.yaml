@@ -8,10 +8,12 @@
       name: CitaSalud Team
       email: support@citasalud.com
   servers:
+    - url: https://citasaludfeature3.onrender.com
+      description: main server in render
     - url: http://localhost:8080
       description: Local development server
     - url: https://cita-salud-backend.onrender.com
-      description: Producción en Render
+      description: Other Production in Render
     - url: http://localhost:8081
       description: Other Local development server
   security:
