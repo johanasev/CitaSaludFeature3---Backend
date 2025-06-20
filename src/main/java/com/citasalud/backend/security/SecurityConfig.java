@@ -51,7 +51,10 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/actuator/prometheus",
-                                "/openapi.yaml"
+                                "/openapi.yaml",
+                                "/api/especialidades",
+                                "/api/roles"
+
                         ).permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
@@ -68,6 +71,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:3000",
                 "https://cita-salud-backend.onrender.com",
                 "https://cita-salud-feature3-frontend.vercel.app/")); // Asegura que tu frontend local esté permitido
+
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true); // Necesario si se usan cookies o JWT
