@@ -10,6 +10,10 @@
   servers:
     - url: http://localhost:8080
       description: Local development server
+    - url: https://cita-salud-backend.onrender.com
+      description: Producción en Render
+    - url: http://localhost:8081
+      description: Other Local development server
   security:
     - BearerAuth: []
   paths:
